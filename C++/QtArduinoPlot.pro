@@ -5,7 +5,8 @@
 #-------------------------------------------------
 
 QT       += core gui\
-    printsupport
+            printsupport\
+            serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,11 +14,11 @@ TARGET = QtArduinoPlot
 TEMPLATE = app
 
 
-SOURCES += main.cpp\
-        mainwindow.cpp \
-    qcustomplot.cpp
+SOURCES +=  main.cpp\
+            mainwindow.cpp \
+            qcustomplot.cpp
 
 HEADERS  += mainwindow.h \
-    qcustomplot.h
+            qcustomplot.h
 
 FORMS    += mainwindow.ui

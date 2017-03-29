@@ -20,7 +20,7 @@
       <x>10</x>
       <y>0</y>
       <width>781</width>
-      <height>541</height>
+      <height>531</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -36,7 +36,7 @@
         <x>10</x>
         <y>10</y>
         <width>751</width>
-        <height>491</height>
+        <height>471</height>
        </rect>
       </property>
      </widget>
@@ -75,7 +75,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>480</y>
+        <y>460</y>
         <width>401</width>
         <height>21</height>
        </rect>
@@ -166,7 +166,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>20</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuLivePlotter">

@@ -1,10 +1,14 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+
 #include <QMainWindow>
+#include <QtDebug>
+#include <QSerialPort>
+
 
 namespace Ui {
-class MainWindow;
+    class MainWindow;
 }
 
 class MainWindow : public QMainWindow
@@ -18,6 +22,8 @@ public:
 private slots:
 
     void on_deviceAdress_returnPressed();
+
+    void readData();
 
     void on_connect_clicked();
 

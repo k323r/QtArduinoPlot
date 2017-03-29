@@ -28,17 +28,17 @@ int length_data = sizeof(data);
 
 void setup() {
     Serial.begin(115200);
-    Serial.println("test utility that sends 6 floats over the serial connection");
-    Serial.print("length of serialized array: "); Serial.print(length_data); Serial.print(" Size of float: "); Serial.println(length_data);
+    //Serial.println("test utility that sends 6 floats over the serial connection");
+    //Serial.print("length of serialized array: "); Serial.print(length_data); Serial.print(" Size of float: "); Serial.println(length_data);
 }
 
 void loop() {
     update_data();
     char send_buffer[length_data];
     memcpy(&send_buffer, &data, length_data);   // copy the struct into the new buffer
-    Serial.write('S');                    // starting byte to ensure data integrity
+    //Serial.write('S');                    // starting byte to ensure data integrity
     Serial.write((uint8_t *) &send_buffer, length_data);  // send the actual data
-    Serial.write('E');                    // end byte to ensure data integrity
+    Serial.write('\n');                    // end byte to ensure data integrity
     
     delay(50);
 
