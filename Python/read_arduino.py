@@ -2,10 +2,13 @@
 
 import serial, time, struct, os
 
+dev = "/dev/ttyACM0"
+
 # create a serial object and connect it to /dev/ttyUSB0
 
 arduino_serial = serial.Serial();
-arduino_serial.port = "/dev/ttyUSB0"
+# arduino_serial.port = "/dev/ttyUSB0"
+arduino_serial.port = dev
 arduino_serial.baudrate = 115200
 arduino_serial.bytesize = serial.EIGHTBITS
 arduino_serial.parity = serial.PARITY_NONE
@@ -15,7 +18,7 @@ arduino_serial.timeout = None
 try:
     arduino_serial.open()
 except Exception, e:
-    print "error opening serial port /dev/ttyUSB0: ", str(e)
+    print "error opening serial port: ", dev," : ", str(e)
     exit()
 
 if not os.path.isdir("./logs"):
