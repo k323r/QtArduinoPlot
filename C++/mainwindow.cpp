@@ -36,7 +36,25 @@ void MainWindow::readData() {
 //    QByteArray single = serial->read(1);
     QByteArray block;
     block = serial->readLine();
-    qInfo() << block;
+    int nBytes = block.length() - 1;
+    qInfo() << nBytes;
+    float values[nBytes/4];
+
+    if (nBytes % 4 == 0) {
+        qInfo() << "working";
+        for(int i = 0; i < nBytes; i = i + 4) {
+            qInfo() << "i : " << i;
+            quint32 tmp = ((char)block[i + 3] << 24) | ((char)block[i + 2] << 16) | ((char)block[i + 1] << 8) | (char)block[i];
+            // float *tOut = reinterpret_cast<float*>(&tmp);
+            // values[i/4] = *tOut;
+            values[i/4] = *( reinterpret_cast<float*> (&tmp) );
+        }
+    }
+
+    qInfo() << values[0];
+    qInfo() << values[1];
+//    float *out = reinterpret_cast<float*>(&tmp);
+//    qInfo() << "float" << *out;
 //    if (single.toStdString() == "S") {
 //        block = serial->read(24);
 //    }

@@ -12,6 +12,9 @@ struct Data {
     
 } data;
 
+float test = 3.1415;
+float test2 = 22.7723;
+
 void update_data() {
    unsigned long c_time = millis()/1000.0;
    data.a = sin(c_time);
@@ -33,15 +36,18 @@ void setup() {
 }
 
 void loop() {
-    update_data();
-    char send_buffer[length_data];
-    memcpy(&send_buffer, &data, length_data);   // copy the struct into the new buffer
+    //update_data();
+    //char send_buffer[length_data];
+    //memcpy(&send_buffer, &data, length_data);   // copy the struct into the new buffer
     //Serial.write('S');                    // starting byte to ensure data integrity
-    Serial.write((uint8_t *) &send_buffer, length_data);  // send the actual data
+    //Serial.write((uint8_t *) &send_buffer, length_data);  // send the actual data
+    Serial.write((uint8_t *) &test, sizeof(test));
+    Serial.write((uint8_t *) &test2, sizeof(test2));
     Serial.write('\n');                    // end byte to ensure data integrity
     
-    delay(50);
+    delay(250);
 
 }
+
 
 

@@ -26,21 +26,6 @@
     <property name="currentIndex">
      <number>0</number>
     </property>
-    <widget class="QWidget" name="livefeed">
-     <attribute name="title">
-      <string>Livefeed</string>
-     </attribute>
-     <widget class="QCustomPlot" name="widget" native="true">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>10</y>
-        <width>751</width>
-        <height>471</height>
-       </rect>
-      </property>
-     </widget>
-    </widget>
     <widget class="QWidget" name="setup">
      <attribute name="title">
       <string>Setup</string>
@@ -157,6 +142,21 @@
      <attribute name="title">
       <string>Measure</string>
      </attribute>
+    </widget>
+    <widget class="QWidget" name="livefeed">
+     <attribute name="title">
+      <string>Livefeed</string>
+     </attribute>
+     <widget class="QCustomPlot" name="widget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>751</width>
+        <height>471</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
    </widget>
   </widget>
