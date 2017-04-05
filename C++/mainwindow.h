@@ -3,8 +3,10 @@
 
 
 #include <QMainWindow>
+#include <QtCore>
 #include <QtDebug>
 #include <QSerialPort>
+#include "qcustomplot.h"
 
 
 namespace Ui {
@@ -37,8 +39,11 @@ private slots:
 
     void on_baud4_clicked();
 
+    void setupPlayground(QCustomPlot *customPlot);
+
 private:
     Ui::MainWindow *ui;
+    QTimer dataTimer;
 };
 
 #endif // MAINWINDOW_H

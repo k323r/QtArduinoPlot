@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="setup">
      <attribute name="title">
@@ -147,7 +147,7 @@
      <attribute name="title">
       <string>Livefeed</string>
      </attribute>
-     <widget class="QCustomPlot" name="widget" native="true">
+     <widget class="QCustomPlot" name="customPlot" native="true">
       <property name="geometry">
        <rect>
         <x>10</x>
