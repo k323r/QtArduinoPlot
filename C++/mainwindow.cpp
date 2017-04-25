@@ -46,8 +46,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->customPlot->xAxis, SIGNAL(rangeChanged(QCPRange)), ui->customPlot->xAxis2, SLOT(setRange(QCPRange)));
     connect(ui->customPlot->yAxis, SIGNAL(rangeChanged(QCPRange)), ui->customPlot->yAxis2, SLOT(setRange(QCPRange)));
 
-    // setup a timer that repeatedly calls MainWindow::realtimeDataSlot:
-    connect(&dataTimer, SIGNAL(timeout()), this, SLOT(realtimeDataSlot()));
     dataTimer.start(0); // Interval 0 means to refresh as fast as possible
 }
 
@@ -75,85 +73,60 @@ void MainWindow::readData() {
     buffer[2] = block[2];
     buffer[3] = block[3];
 
-    float in_value = *(float *)&buffer;
+    float in_value1 = *(float *)&buffer;
 
-    qInfo() << "value: " << in_value;
+    buffer[0] = block[4];
+    buffer[1] = block[5];
+    buffer[2] = block[6];
+    buffer[3] = block[7];
 
-//    qInfo() << "length : " << block.length();
+    float in_value2 = *(float *)&buffer;
 
-    // calculate two new data points:
-    #if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
-        double key = 0;
-    #else
-        double key = QDateTime::currentDateTime().toMSecsSinceEpoch()/1000.0;
-    #endif
+    qInfo() << "values are here!";
 
-    static double lastPointKey = 0;
+    if (! ( fabs(in_value1) < SMALL) and !(fabs(in_value2) < SMALL)) {
+        qInfo() << "value1: " << in_value1;
+        qInfo() << "value2: " << in_value2;
 
-    if (key-lastPointKey > 0.001) {
+        // calculate two new data points:
+        #if QT_VERSION < QT_VERSION_CHECK(4, 7, 0)
+            double key = 0;
+        #else
+            double key = QDateTime::currentDateTime().toMSecsSinceEpoch()/1000.0;
+        #endif
 
-      //double value0 = sin(key*1.6+cos(key*1.7)*2)*10 + sin(key*1.2+0.56)*20 + 26;
-      //double value0 = serial->read()
-      //double value1 = sin(key*1.3+cos(key*1.2)*1.2)*7 + sin(key*0.9+0.26)*24 + 26;
+        static double lastPointKey = 0;
 
-      //double value0 = tan(key);  //qSin(key); //sin(key*1.6+cos(key*1.7)*2)*10 + sin(key*1.2+0.56)*20 + 26;
-      //double value1 = -tan(key); //qCos(key); //sin(key*1.3+cos(key*1.2)*1.2)*7 + sin(key*0.9+0.26)*24 + 26;
+        if (key-lastPointKey > 0.002) {
+            ui->customPlot->graph(0)->addData(key, in_value1);
+            ui->customPlot->graph(0)->removeDataBefore(key-8);
 
+            ui->customPlot->graph(1)->addData(key, in_value2);
+            ui->customPlot->graph(1)->removeDataBefore(key-8);
 
-      // add data to lines:
-      ui->customPlot->graph(0)->addData(key, in_value);
-      //ui->customPlot->graph(1)->addData(key, value1);
-      // set data of dots:
-      //ui->customPlot->graph(2)->clearData();
-      //ui->customPlot->graph(2)->addData(key, value0);
-      //ui->customPlot->graph(3)->clearData();
-      //ui->customPlot->graph(3)->addData(key, value1);
-      // remove data of lines that's outside visible range:
-      ui->customPlot->graph(0)->removeDataBefore(key-8);
-      //ui->customPlot->graph(1)->removeDataBefore(key-8);
-      // rescale value (vertical) axis to fit the current data:
-      ui->customPlot->graph(0)->rescaleValueAxis();
-      //ui->customPlot->graph(1)->rescaleValueAxis(true);
-      lastPointKey = key;
-    }
-    // make key axis range scroll with the data (at a constant range size of 8):
-    ui->customPlot->xAxis->setRange(key+0.25, 8, Qt::AlignRight);
-    ui->customPlot->replot();
+            ui->customPlot->graph(0)->rescaleValueAxis();
 
+            lastPointKey = key;
+        }
 
+        ui->customPlot->xAxis->setRange(key+0.25, 8, Qt::AlignRight);
+        ui->customPlot->replot();
 
-//    qInfo() << block[0] << block[1] << block[2] << block[3];
+        // calculate frames per second:
+        static double lastFpsKey;
+        static int frameCount;
+        ++frameCount;
+        if (key-lastFpsKey > 2) { // average fps over 2 seconds
 
-
-//    quint32 tmp1 = ((char)block[3] << 24) | ((char)block[2] << 16) | ((char)block[1] << 8) | (char)block[0];
-//    qInfo() <<  *( reinterpret_cast<float*> (&tmp1) );
-
-//    quint32 tmp2 = ((char)block[4] << 24) | ((char)block[5] << 16) | ((char)block[6] << 8) | (char)block[7];
-//    qInfo() <<  *( reinterpret_cast<float*> (&tmp2) );
-
-
-/*
-    if (nBytes % 4 == 0) {
-        qInfo() << "working";
-        for(int i = 0; i < nBytes; i = i + 4) {
-            qInfo() << "i : " << i;
-            quint32 tmp = ((char)block[i + 3] << 24) | ((char)block[i + 2] << 16) | ((char)block[i + 1] << 8) | (char)block[i];
-            // float *tOut = reinterpret_cast<float*>(&tmp);
-            // values[i/4] = *tOut;
-            // values[i/4] = *( reinterpret_cast<float*> (&tmp) );
-            qInfo() << "index: " << i/4 << " : " << *( reinterpret_cast<float*> (&tmp) );
+            ui->statusBar->showMessage(
+                QString("%1 FPS, Total Data points: %2")
+                .arg(frameCount/(key-lastFpsKey), 0, 'f', 0)
+                .arg(ui->customPlot->graph(0)->data()->count()+ui->customPlot->graph(1)->data()->count())
+                    , 0);
+            lastFpsKey = key;
+            frameCount = 0;
         }
     }
-
-//    qInfo() << values[0];
-//    qInfo() << values[1];
-//    float *out = reinterpret_cast<float*>(&tmp);
-//    qInfo() << "float" << *out;
-//    if (single.toStdString() == "S") {
-//        block = serial->read(24);
-//    }
-*/
-
 }
 
 void MainWindow::on_connect_clicked()
@@ -173,6 +146,7 @@ void MainWindow::on_connect_clicked()
 //    qInfo() << "first byte: " << serial->read(1);
     ui->connect->setDisabled(true);
     connected = true;
+    ui->statusBar->showMessage( QString("connected"), 0);
 }
 
 void MainWindow::on_disconnect_clicked()
@@ -182,6 +156,7 @@ void MainWindow::on_disconnect_clicked()
     }
     ui->connect->setDisabled(false);
     qInfo("disconnected");
+    ui->statusBar->showMessage( QString("disconnected"), 0);
 }
 
 void MainWindow::on_baud1_clicked()

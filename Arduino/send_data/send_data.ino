@@ -48,7 +48,9 @@ void loop() {
     //Serial.write('S');                    // starting byte to ensure data integrity
     //Serial.write((uint8_t *) &send_buffer, length_data);  // send the actual data
     test = sin(millis() / 1000.0);
+    test2 = cos(millis() / 1000.0);
     Serial.write((uint8_t *) &test, sizeof(test));
+    Serial.write((uint8_t *) &test2, sizeof(test2));
 //    Serial.write((uint8_t *) &test2, sizeof(test2));
 //    Serial.write((uint8_t *) &test3, sizeof(test3));
 //    Serial.write((uint8_t *) &test4, sizeof(test4));

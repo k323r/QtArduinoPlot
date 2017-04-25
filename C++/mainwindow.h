@@ -8,6 +8,7 @@
 #include <QSerialPort>
 #include "qcustomplot.h"
 
+#define SMALL 1e-12
 
 namespace Ui {
     class MainWindow;
